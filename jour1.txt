@@ -1,0 +1,225 @@
+eo ary ilay J-1
+
+mila login 
+
+protection des pages du back office 
+
+bouton pour reinitialiser les donnees 
+
+import csv 
+
+fichier zip pour les images 
+
+page pour afficher les commandes avec modification 
+
+echec de paiement 
+paiement effecture 
+paiement annule  
+
+
+
+
+
+
+URL de base : http://localhost/eval/api/
+
+================================================================================
+1. PROTECTION DES PAGES
+================================================================================
+http://localhost/eval/api/
+http://localhost/eval/api/employees/{id}
+
+Explications : Pas d'endpoint API à proprement parler — géré par la clé API Webservice + Basic Auth.
+Vérifier l'accès à chaque requête.
+GET /api/ – vérifie la validité de la clé API
+GET /api/employees/{id} – récupère les infos de l'employé connecté
+Header requis sur chaque requête : Authorization: Basic base64(API_KEY + ":")
+
+================================================================================
+2. RÉINITIALISATION DES DONNÉES
+================================================================================
+http://localhost/eval/api/orders/{id}
+http://localhost/eval/api/order_details/{id}
+http://localhost/eval/api/carts/{id}
+http://localhost/eval/api/combinations/{id}
+http://localhost/eval/api/products/{id}
+http://localhost/eval/api/images/products/{id_product}/{id_image}
+http://localhost/eval/api/categories/{id}
+http://localhost/eval/api/products?display=[id]&limit=1000
+http://localhost/eval/api/orders?display=[id]&limit=1000
+
+Explications : Suppression complète avant re-import. Ordre important : d'abord commandes, puis produits, puis catégories.
+DELETE /api/orders/{id}
+DELETE /api/order_details/{id}
+DELETE /api/carts/{id}
+DELETE /api/combinations/{id}
+DELETE /api/products/{id}
+DELETE /api/images/products/{id_product}/{id_image}
+DELETE /api/categories/{id} – sauf la racine (id=1 ou 2)
+GET /api/products?display=[id]&limit=1000 – Lister tous les IDs à supprimer
+GET /api/orders?display=[id]&limit=1000
+
+================================================================================
+3. IMPORT CSV + IMAGES ZIP
+================================================================================
+http://localhost/eval/api/categories?schema=blank
+http://localhost/eval/api/categories
+http://localhost/eval/api/products?schema=blank
+http://localhost/eval/api/products
+http://localhost/eval/api/combinations?schema=blank
+http://localhost/eval/api/combinations
+http://localhost/eval/api/images/products/{id_product}
+http://localhost/eval/api/stock_availables/{id}
+http://localhost/eval/api/languages
+http://localhost/eval/api/tax_rule_groups
+
+Explications : Ordre impératif : catégories → produits → combinaisons → images. Récupérer les schemas avant d'envoyer.
+GET /api/categories?schema=blank – template création catégorie
+POST /api/categories – créer chaque catégorie du CSV
+GET /api/products?schema=blank – template création produit
+POST /api/products – créer chaque produit du CSV
+GET /api/combinations?schema=blank
+POST /api/combinations – déclinaisons (tailles, couleurs...)
+POST /api/images/products/{id_product} – upload image (multipart/form-data)
+PATCH /api/stock_availables/{id} – mettre à jour le stock après import
+GET /api/languages – récupérer les id_lang disponibles
+GET /api/tax_rule_groups – récupérer les groupes de TVA
+
+Point critique : L'ordre est absolu — si tu crées un produit avant sa catégorie, la requête échoue.
+Il faut aussi stocker les IDs retournés par PrestaShop lors de chaque POST pour les réutiliser dans les requêtes suivantes
+(par exemple, l'id_product retourné par le POST produit est nécessaire pour POST /api/images/products/{id_product}).
+
+================================================================================
+4. GESTION DES COMMANDES + ÉTATS
+================================================================================
+http://localhost/eval/api/orders
+http://localhost/eval/api/orders/{id}
+http://localhost/eval/api/order_states
+http://localhost/eval/api/order_histories
+http://localhost/eval/api/order_histories?filter[id_order]={id}
+http://localhost/eval/api/customers/{id}
+http://localhost/eval/api/order_details?filter[id_order]={id}
+
+Explications : Afficher les commandes et changer leur état : échec paiement, paiement effectué, annulé.
+GET /api/orders - Liste toutes les commandes
+GET /api/orders/{id} - détail d'une commande
+GET /api/order_states - Liste tous les états disponibles
+POST /api/order_histories - changer l'état d'une commande
+GET /api/order_histories?filter[id_order]={id} - historique d'une commande
+GET /api/customers/{id} - Infos client de la commande
+GET /api/order_details?filter[id_order]={id} - produits commandés
+
+États clés à identifier via /api/order_states :
+- Paiement accepté (Id=2)
+- Annulé (Id=6)
+- Échec paiement (Id=8)
+- les IDs varient selon l'install
+
+Point critique : Le changement d'état ne se fait PAS via PUT /api/orders/{id} mais via POST /api/order_histories —
+c'est une distinction importante. Chaque changement d'état crée une entrée dans l'historique.
+
+================================================================================
+5. PAGE D'ACCUEIL + FICHES PRODUITS (FRONT OFFICE)
+================================================================================
+http://localhost/eval/api/products?display=full&filter[active]=1
+http://localhost/eval/api/products/{id}
+http://localhost/eval/api/images/products/{id_product}
+http://localhost/eval/api/categories?filter[active]=1
+http://localhost/eval/api/combinations?filter[id_product]={id}
+http://localhost/eval/api/stock_availables?filter[id_product]={id}
+http://localhost/eval/api/product_features?filter[id_product]={id}
+
+Explications :
+GET /api/products?display=full&filter[active]=1 – Listing produits actifs
+GET /api/products/{id} – fiche produit complète
+GET /api/images/products/{id_product} – Liste des images du produit
+GET /api/categories?filter[active]=1 – navigation par catégories
+GET /api/combinations?filter[id_product]={id} – déclinaisons produit
+GET /api/stock_availables?filter[id_product]={id} – stock disponible
+GET /api/product_features?filter[id_product]={id} – caractéristiques produit
+
+================================================================================
+6. GESTION DU PANIER (FRONT OFFICE)
+================================================================================
+http://localhost/eval/api/carts
+http://localhost/eval/api/carts/{id}
+http://localhost/eval/api/carts/{id}
+http://localhost/eval/api/carriers?filter[active]=1
+http://localhost/eval/api/currencies?filter[active]=1
+http://localhost/eval/api/languages?filter[active]=1
+
+Explications :
+POST /api/carts – créer un nouveau panier
+GET /api/carts/{id} – Lire le panier en cours
+PUT /api/carts/{id} – ajouter/modifier produits dans le panier
+GET /api/carriers?filter[active]=1 – transporteurs dispo (Livraison à La Livraison)
+GET /api/currencies?filter[active]=1 – devise active
+GET /api/languages?filter[active]=1 – Langue active
+
+================================================================================
+7. VALIDATION COMMANDE (PAIEMENT À LA LIVRAISON) (FRONT OFFICE)
+================================================================================
+http://localhost/eval/api/customers?schema=blank
+http://localhost/eval/api/customers
+http://localhost/eval/api/addresses?schema=blank
+http://localhost/eval/api/addresses
+http://localhost/eval/api/carriers?filter[active]=1
+http://localhost/eval/api/orders
+http://localhost/eval/api/order_histories
+http://localhost/eval/api/countries
+http://localhost/eval/api/groups
+
+Explications : Pas de frais de livraison. Module "paiement à la livraison" (ps_cashondelivery).
+GET /api/customers?schema=blank – template si création compte à la volée
+POST /api/customers – créer le client si non connecté
+GET /api/addresses?schema=blank
+POST /api/addresses – adresse de livraison et facturation
+GET /api/carriers?filter[active]=1 – récupérer l'id du carrier "gratuit"
+POST /api/orders – passer la commande (module=ps_cashondelivery)
+POST /api/order_histories – définir l'état initial "En attente de paiement"
+GET /api/countries – liste pays pour l'adresse
+GET /api/groups – groupe client par défaut (id_default_group)
+
+Point critique : Le champ module dans le POST /api/orders doit valoir ps_cashondelivery, et le id_carrier doit correspondre
+à un transporteur configuré avec frais à 0 (à vérifier via GET /api/carriers).
+
+================================================================================
+8. MES COMMANDES (ESPACE CLIENT) (FRONT OFFICE)
+================================================================================
+http://localhost/eval/api/orders?filter[id_customer]={id}&sort=[date_add_DESC]
+http://localhost/eval/api/orders/{id}
+http://localhost/eval/api/order_states/{id}
+http://localhost/eval/api/order_details?filter[id_order]={id}
+http://localhost/eval/api/order_histories?filter[id_order]={id}
+http://localhost/eval/api/order_invoices?filter[id_order]={id}
+
+Explications :
+GET /api/orders?filter[id_customer]={id}&sort=[date_add_DESC] – commandes du client connecté
+GET /api/orders/{id} – détail d'une commande spécifique
+GET /api/order_states/{id} – libellé de l'état de la commande
+GET /api/order_details?filter[id_order]={id} – produits de la commande
+GET /api/order_histories?filter[id_order]={id} – historique des états
+GET /api/order_invoices?filter[id_order]={id} – factures associées
+
+================================================================================
+POINTS CRITIQUES SUPPLÉMENTAIRES
+================================================================================
+
+Pour l'authentification front office :
+Si vous voulez un vrai espace client (connexion, "mes commandes"), PrestaShop n'a pas d'endpoint /api/login.
+Vous devrez gérer la session côté serveur avec les cookies natifs de PrestaShop, ou stocker id_customer côté client
+après l'avoir récupéré via GET /api/customers?filter[email]=...
+
+================================================================================
+HEADER REQUIS POUR TOUTES LES REQUÊTES
+================================================================================
+Authorization: Basic base64(API_KEY + ":")
+
+
+
+
+
+
+
+
+
