@@ -1,25 +1,3 @@
-eo ary ilay J-1
-
-mila login 
-
-protection des pages du back office 
-
-bouton pour reinitialiser les donnees 
-
-import csv 
-
-fichier zip pour les images 
-
-page pour afficher les commandes avec modification 
-
-echec de paiement 
-paiement effecture 
-paiement annule  
-
-
-
-
-
 
 URL de base : http://localhost/eval/api/
 

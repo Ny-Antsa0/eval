@@ -1,0 +1,73 @@
+PROJET : GESTIONNAIRE DE DONNÉES PRESTASHOP 8 (BACK-OFFICE CUSTOM)
+----------------------------------------------------------------
+
+1. AUTHENTIFICATION & SÉCURITÉ
+    - Login / Password : Pré-remplir avec "admin" / "admin" pour l'accès rapide.
+    - Persistance de session : 
+        * Stockage du token en SessionStorage ou Cookies sécurisés.
+        * Middleware de protection : Si l'utilisateur n'est pas authentifié, redirection immédiate vers /login.
+        * Interdiction stricte de l'accès par URL directe (Deep Linking) sans session active.
+        * Suppression des données de session au clic sur "Déconnexion".
+
+2. RÉINITIALISATION DES DONNÉES (CLEANER)
+    - Action : Purge complète de la base de données via l'API.
+    - Ordre de suppression (Crucial pour éviter les erreurs de clés étrangères) :
+        * Groupe VENTES : order_details -> order_histories -> order_invoices -> order_payments -> order_slip -> order_cart_rules -> order_carriers -> orders.
+        * Groupe CLIENTS : customers -> carts.
+        * Groupe CATALOGUE : combinations -> product_option_values -> product_options -> products.
+        * Groupe CONFIG : categories -> taxes -> tax_rules -> tax_rule_groups.
+    - Implémentation technique :
+        * Utilisation du fichier 'xmlParser.js' pour générer les requêtes DELETE.
+        * Structure Try/Catch : En cas d'erreur de suppression sur une ligne (ex: contrainte SQL), l'application continue et stocke l'erreur.
+        * Résultat : Affichage d'un rapport listant les tables nettoyées et celles en échec.
+    - UI : Un bouton "Réinitialiser" dédié par groupe de tables.
+
+3. IMPORTATION MASSIVE (CSV & IMAGES)
+    - Import CSV Multi-fichiers :
+        * Champ d'import permettant la sélection de plusieurs fichiers simultanément.
+        * Logique de lecture : Flux (Stream) pour transformer le texte brut en JSON.
+        * Conversion XML : Passage du JSON par 'xmlParser.js' pour formater les données selon les schémas PrestaShop.
+        * Synchronisation : Méthodes PUT (mise à jour) ou POST (création) sur les endpoints concernés.
+    - Gestion des Images (.ZIP) :
+        * Champ d'upload pour fichier .ZIP unique.
+        * Extraction des images et liaison automatique via le nom du fichier (ex: 101.jpg lié au produit ID 101).
+        * Upload binaire vers l'endpoint '/api/images/products/'.
+
+4. GESTION DES COMMANDES (DASHBOARD MODIFIABLE)
+    - Affichage : Liste dynamique des commandes via '/api/orders'.
+    - Bouton "Modifier" : Ouvre les options de modification rapide pour chaque ligne.
+    - Actions rapides sur les statuts (via '/api/order_histories') :
+        * ARREUR 1 : Échec de paiement (ID 8).
+        * ARREUR 2 : Paiement effectué (ID 2).
+        * ARREUR 3 : Paiement annulé (ID 6).
+    - Validation : Confirmation visuelle après chaque modification de statut.
+
+5. INTERFACE UTILISATEUR (UI)
+    - Page de Contrôle Centralisée :
+        * Section 1 : Boutons de réinitialisation par table.
+        * Section 2 : Zone de Drag & Drop pour fichiers CSV multiples.
+        * Section 3 : Zone d'upload pour le dossier d'images .ZIP.
+        * Section 4 : Tableau de bord des commandes avec boutons de modification.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

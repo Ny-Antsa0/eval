@@ -1,38 +1,34 @@
-
 import './App.css'
-import { ListeDeliveries } from './components/test.tsx'
+import { ListeProduit } from './services/listeProduit'
 
 
 export function App() {
 
   return (
-    <>
-      <header className="app-header">
-        <div className="app-header-left">
-          <h1>eo mba misy mandeha eh</h1>
+    <div className="app-shell">
+      <header className="app-topbar">
+        <div>
+          <p className="app-kicker">Front office</p>
+          <h2>Catalogue produits</h2>
         </div>
-        <div className="app-header-right">
-          <button
-            type="button"
-            className="logout-button"
-            onClick={() => {
-              try {
-                sessionStorage.removeItem('front_eval_logged_in')
-              } finally {
-                // reload to show login gate again
-                window.location.reload()
-              }
-            }}
-          >
-            Déconnecter
-          </button>
-            <div>
-              <ListeDeliveries />
-            </div>
 
-        </div>
+        <button
+          type="button"
+          className="logout-button"
+          onClick={() => {
+            try {
+              sessionStorage.removeItem('front_eval_logged_in')
+            } finally {
+              window.location.reload()
+            }
+          }}
+        >
+          Déconnecter
+        </button>
       </header>
-    </>
+
+      <ListeProduit />
+    </div>
   )
 }
 

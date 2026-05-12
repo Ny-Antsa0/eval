@@ -1,26 +1,26 @@
+export const BASE_URL = '/api'
+export const API_KEY = 'uB6mqRpBAuBBgtovR1ok6aPRwz0LMMCs'
 
-const BASE_URL = "/api";
-const API_KEY = "3LZMBGoR1vUMORTAAMRRfyswjsLC9Res";
-export const getData = async (endpoint: string) : Promise<string | null> => {
+export const buildApiUrl = (endpoint: string) => {
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint
+    const separator = cleanEndpoint.includes('?') ? '&' : '?'
 
+    return `${BASE_URL}/${cleanEndpoint}${separator}ws_key=${API_KEY}`
+}
+
+export const getData = async (endpoint: string): Promise<string | null> => {
     try {
+        const url = buildApiUrl(endpoint)
+        const response = await fetch(url)
 
-        const url = BASE_URL + "/" + endpoint + "?ws_key=" + API_KEY   ;
-        const valiny = await fetch(url);
-
-         if(!valiny.ok){
-            throw new Error('Erreur HTTP: ${valiny.status}');
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`)
         }
 
-        const xmlTest = await valiny.text();
-       
-        return xmlTest;        
-    }
-
-    catch (error) {
-        console.log("Error fetching data from API", error) ;
-        console.log("tsy metyyyyyyyyyy");
-        return null ;
+        return await response.text()
+    } catch (error) {
+        console.log('Error fetching data from API', error)
+        return null
     }
 }
 

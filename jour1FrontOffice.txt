@@ -1,0 +1,159 @@
+5. PAGE D'ACCUEIL + FICHES PRODUITS (FRONT OFFICE)
+================================================================================
+http://localhost/eval/api/products?display=full&filter[active]=1
+http://localhost/eval/api/products/{id}
+http://localhost/eval/api/images/products/{id_product}
+http://localhost/eval/api/categories?filter[active]=1
+http://localhost/eval/api/combinations?filter[id_product]={id}
+http://localhost/eval/api/stock_availables?filter[id_product]={id}
+http://localhost/eval/api/product_features?filter[id_product]={id}
+
+Explications :
+GET /api/products?display=full&filter[active]=1 – Listing produits actifs
+GET /api/products/{id} – fiche produit complète
+GET /api/images/products/{id_product} – Liste des images du produit
+GET /api/categories?filter[active]=1 – navigation par catégories
+GET /api/combinations?filter[id_product]={id} – déclinaisons produit
+GET /api/stock_availables?filter[id_product]={id} – stock disponible
+GET /api/product_features?filter[id_product]={id} – caractéristiques produit
+
+================================================================================
+6. GESTION DU PANIER (FRONT OFFICE)
+================================================================================
+http://localhost/eval/api/carts
+http://localhost/eval/api/carts/{id}
+http://localhost/eval/api/carts/{id}
+http://localhost/eval/api/carriers?filter[active]=1
+http://localhost/eval/api/currencies?filter[active]=1
+http://localhost/eval/api/languages?filter[active]=1
+
+Explications :
+POST /api/carts – créer un nouveau panier
+GET /api/carts/{id} – Lire le panier en cours
+PUT /api/carts/{id} – ajouter/modifier produits dans le panier
+GET /api/carriers?filter[active]=1 – transporteurs dispo (Livraison à La Livraison)
+GET /api/currencies?filter[active]=1 – devise active
+GET /api/languages?filter[active]=1 – Langue active
+
+================================================================================
+7. VALIDATION COMMANDE (PAIEMENT À LA LIVRAISON) (FRONT OFFICE)
+================================================================================
+http://localhost/eval/api/customers?schema=blank
+http://localhost/eval/api/customers
+http://localhost/eval/api/addresses?schema=blank
+http://localhost/eval/api/addresses
+http://localhost/eval/api/carriers?filter[active]=1
+http://localhost/eval/api/orders
+http://localhost/eval/api/order_histories
+http://localhost/eval/api/countries
+http://localhost/eval/api/groups
+
+Explications : Pas de frais de livraison. Module "paiement à la livraison" (ps_cashondelivery).
+GET /api/customers?schema=blank – template si création compte à la volée
+POST /api/customers – créer le client si non connecté
+GET /api/addresses?schema=blank
+POST /api/addresses – adresse de livraison et facturation
+GET /api/carriers?filter[active]=1 – récupérer l'id du carrier "gratuit"
+POST /api/orders – passer la commande (module=ps_cashondelivery)
+POST /api/order_histories – définir l'état initial "En attente de paiement"
+GET /api/countries – liste pays pour l'adresse
+GET /api/groups – groupe client par défaut (id_default_group)
+
+Point critique : Le champ module dans le POST /api/orders doit valoir ps_cashondelivery, et le id_carrier doit correspondre
+à un transporteur configuré avec frais à 0 (à vérifier via GET /api/carriers).
+
+================================================================================
+8. MES COMMANDES (ESPACE CLIENT) (FRONT OFFICE)
+================================================================================
+http://localhost/eval/api/orders?filter[id_customer]={id}&sort=[date_add_DESC]
+http://localhost/eval/api/orders/{id}
+http://localhost/eval/api/order_states/{id}
+http://localhost/eval/api/order_details?filter[id_order]={id}
+http://localhost/eval/api/order_histories?filter[id_order]={id}
+http://localhost/eval/api/order_invoices?filter[id_order]={id}
+
+Explications :
+GET /api/orders?filter[id_customer]={id}&sort=[date_add_DESC] – commandes du client connecté
+GET /api/orders/{id} – détail d'une commande spécifique
+GET /api/order_states/{id} – libellé de l'état de la commande
+GET /api/order_details?filter[id_order]={id} – produits de la commande
+GET /api/order_histories?filter[id_order]={id} – historique des états
+GET /api/order_invoices?filter[id_order]={id} – factures associées
+
+
+
+
+
+1 - voici les api utilisable pour la page d'acceuil 
+faire la liste de produit actif 
+GET /api/products?display=full&filter[active]=1 – Listing produits actifs
+en se referent a la structure du code existant fait la liste de tous les produits qui utilise les fonctions dans xmlParser.js
+
+
+2 - fait une page /service/listeProduit.tsx
+pour le fech 
+ apres le fech 
+transforme le xml en list de tableau et afficher le un par un
+
+3 - sur cette affichage le produit doit etre avec son image et ses informations 
+donc load les informations de chaque produit un par un (images et information) et ajoute le avec le produit correspondant 
+sur la page ajoute un filter par categorie 
+
+4 - pour les images des produits 
+creer un page  /service/imageProduit.tsx pour 
+GET /api/products/{id} 
+
+
+5 - pour les informations des produits 
+creer un page  /service/infoProduit.tsx pour  
+GET /api/images/products/{id_product}
+
+
+sur chaque produit ajoute un bouton ajouter au pannier 
+6 - faire une page pour le panier avec la liste de detail et avec en bouton 
+si un utilisateur n'as pas encore de panier 
+creer un page  /service/panierService.tsx
+http://localhost/eval/api/carts  (crud pour le pannier)
+
+7 - affichage de la liste du panier
+creer un page  /service/listPanier.tsx
+http://localhost/eval/api/carts/{id} {GET} 
+mettre un bouton pour passer commande 
+
+une autre bouton pour payer 
+
+http://localhost/eval/api/order_payments/{id}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

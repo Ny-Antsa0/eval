@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Unbounded:wght@500;700&display=swap');
+
+:root {
+  --bg: #f7f1e7;
+  --bg-alt: #f0e4d3;
+  --text: #2a2420;
+  --text-soft: #6c635a;
+  --border: #d7cbbb;
+  --accent: #cb5f2e;
+  --accent-soft: rgba(203, 95, 46, 0.12);
+  --accent-strong: #a7441d;
+  --card: #fffaf4;
+  --shadow: 0 18px 40px rgba(36, 30, 26, 0.12);
+  --sans: 'DM Sans', 'Segoe UI', sans-serif;
+  --heading: 'Unbounded', 'DM Sans', sans-serif;
+
+  font: 16px/150% var(--sans);
+  letter-spacing: 0.2px;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: radial-gradient(circle at top, #fff5e5 0%, #f3e4cf 40%, #e6d5bf 100%);
+}
+
+#root {
+  min-height: 100svh;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-family: var(--heading);
+  letter-spacing: -0.5px;
+}
+
+h1 {
+  font-size: 36px;
+}
+
+h2 {
+  font-size: 22px;
+}
+
+p {
+  margin: 0;
+}
+
+button,
+input {
+  font-family: inherit;
+}

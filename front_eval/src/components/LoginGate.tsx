@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from 'react'
 import App from '../App.tsx'
-import main from '../main.tsx'
 
 const SESSION_KEY = 'front_eval_logged_in'
 
@@ -75,5 +74,5 @@ export function LoginGate() {
     )
   }
 
-  return <main />
+  return <App />
 }
