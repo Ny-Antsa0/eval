@@ -1,0 +1,47 @@
+===========================================================
+PROJET : FRONT-OFFICE PRESTASHOP (REACT CUSTOM)
+TO-DO LIST FINALE - MISE À JOUR : 15 MAI 2026
+===========================================================
+
+1. AUTHENTIFICATION (USER PICKER)
+---------------------------------
+[ ] Page '/' : Liste des Customers existants via API.
+[ ] Option "Utilisateur Anonyme" (Id = 0 ou null).
+[ ] Persistance du choix utilisateur dans le state global (Context API).
+
+2. LISTING PRODUITS (HOME)
+--------------------------
+[ ] Service 'listeProduit.tsx' : Fetch display=full + XML to Array.
+[ ] Logic 'productLabels.ts' : 
+    - Badge HOT  : < 24h (date_upd/add).
+    - Badge NEW  : < 7 jours (date_add).
+[ ] Service 'imageProduit.tsx' : Récupération asynchrone des images par ID.
+[ ] Service 'infoProduit.tsx' : Détails (features, stock, combinations).
+
+3. RECHERCHE & FILTRES
+----------------------
+[ ] Barre de recherche multicritère :
+    - Filtre par Nom (String match).
+    - Filtre par Catégorie (ID match).
+    - Filtre par Prix (Range min/max).
+[ ] Tri par date ou par prix croissant/décroissant.
+
+4. PANIER & COMMANDES (CART SYSTEM)
+-----------------------------------
+[ ] Service 'panierService.tsx' : 
+    - POST /api/carts (Création).
+    - PUT /api/carts (Ajout/Modif quantité).
+[ ] Page 'listPanier.tsx' : 
+    - Liste détaillée des articles.
+    - Calcul du total HT/TTC.
+[ ] Actions :
+    - Bouton "Passer commande" -> vers POST /api/orders.
+    - Bouton "Payer" -> vers POST /api/order_payments.
+
+5. QUALITÉ & PERFORMANCE
+------------------------
+[ ] Lazy Loading des images produits.
+[ ] Skeleton screens pendant le chargement du XML massif.
+[ ] Gestion des erreurs si l'utilisateur anonyme tente de payer (Redirection login).
+
+===========================================================

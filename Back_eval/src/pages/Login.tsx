@@ -7,6 +7,7 @@ type LoginProps = {
 }
 
 const Login = ({ onLogin, isBusy, error }: LoginProps) => {
+  // Prefill pour le login de demo afin d'accelerer l'acces.
   const [username, setUsername] = useState('admin')
   const [password, setPassword] = useState('admin')
 
@@ -17,13 +18,15 @@ const Login = ({ onLogin, isBusy, error }: LoginProps) => {
           <span className="auth-kicker">PrestaShop 8</span>
           <h1>Back-Office Custom</h1>
           <p>
-            Connexion rapide. Les identifiants sont pre-remplis pour accelerer
-            l'acces.
+            Connexion rapide avec session protegee. Les identifiants sont
+            pre-remplis pour accelerer l&apos;acces.
           </p>
         </div>
+
         <form
           className="auth-form"
           onSubmit={(event) => {
+            // Evite le refresh navigateur et declenche le login applicatif.
             event.preventDefault()
             onLogin(username, password)
           }}
@@ -37,6 +40,7 @@ const Login = ({ onLogin, isBusy, error }: LoginProps) => {
               autoComplete="username"
             />
           </label>
+
           <label>
             <span>Password</span>
             <input
@@ -46,8 +50,12 @@ const Login = ({ onLogin, isBusy, error }: LoginProps) => {
               autoComplete="current-password"
             />
           </label>
+
+          {/* Affiche un message d'erreur uniquement si la tentative echoue. */}
           {error ? <div className="auth-error">{error}</div> : null}
+
           <button className="primary" type="submit" disabled={isBusy}>
+            {/* Bloque les doublons quand une requete est en cours. */}
             {isBusy ? 'Connexion...' : 'Se connecter'}
           </button>
         </form>

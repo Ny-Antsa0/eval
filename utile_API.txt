@@ -1,0 +1,82 @@
+Backoffice (Import & Management)
+Produits :
+
+GET /api/products - Liste des produits
+POST /api/products - Créer un produit
+Déclinaisons :
+
+POST /api/combinations - Créer une déclinaison
+Catégories :
+
+GET /api/categories - Liste des catégories
+GET /api/categories/{id} - Détail catégorie
+POST /api/categories - Créer une catégorie
+Attributs (Product Options) :
+
+GET /api/product_options - Liste des groupes d'attributs
+POST /api/product_options - Créer un groupe d'attributs
+GET /api/product_option_values - Liste des valeurs d'attributs
+POST /api/product_option_values - Créer une valeur d'attribut
+Stock :
+
+GET /api/stock_availables?filter[id_product]=X&filter[id_product_attribute]=Y - Récupérer stock
+PUT /api/stock_availables/{id} - Mettre à jour stock
+POST /api/stock_availables - Créer stock
+Clients :
+
+GET /api/customers - Liste des clients
+GET /api/customers?filter[email]=X - Rechercher client par email
+GET /api/customers/{id} - Détail client
+POST /api/customers - Créer un client
+Adresses :
+
+GET /api/addresses?filter[id_customer]=X - Adresses d'un client
+POST /api/addresses - Créer une adresse
+Commandes :
+
+GET /api/orders - Liste des commandes
+GET /api/orders/{id} - Détail commande
+POST /api/orders - Créer une commande
+POST /api/order_histories - Mettre à jour l'état d'une commande
+POST /api/order_invoices - Créer une facture
+Paniers :
+
+POST /api/carts - Créer un panier
+Taxes :
+
+GET /api/taxes - Liste des taxes
+GET /api/taxes/{id} - Détail taxe
+POST /api/taxes - Créer une taxe
+GET /api/tax_rules - Liste des règles de taxe
+GET /api/tax_rules/{id} - Détail règle de taxe
+POST /api/tax_rules - Créer une règle de taxe
+GET /api/tax_rules_groups - Liste des groupes de règles de taxe
+GET /api/tax_rules_groups/{id} - Détail groupe de règles de taxe
+POST /api/tax_rules_groups - Créer un groupe de règles de taxe
+DELETE /api/tax_rules_group/{id} - Supprimer un groupe de règles de taxe
+FrontOffice (Boutique)
+Produits :
+
+GET /api/products - Liste des produits
+GET /api/products/{id} - Détail produit
+Catégories :
+
+GET /api/categories - Liste des catégories
+GET /api/categories/{id} - Détail catégorie
+Clients :
+
+GET /api/customers - Liste des clients
+GET /api/customers/{id} - Détail client
+Déclinaisons :
+
+GET /api/combinations/{id} - Détail déclinaison
+GET /api/product_option_values/{id} - Détail valeur d'attribut
+Images :
+
+POST /api/images/products/{id} - Upload image produit (via fetch)
+Taxes :
+
+GET /api/tax_rules - Liste des règles de taxe
+GET /api/tax_rules/{id} - Détail règle de taxe
+GET /api/taxes - Liste des taxes
+GET /api/taxes/{id} - Détail taxe

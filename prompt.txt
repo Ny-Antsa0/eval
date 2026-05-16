@@ -1,0 +1,41 @@
+================================================================================
+PROMPT INSTRUCTIF POUR L'IA : REFACTORISATION EN ARCHITECTURE ISOLÉE
+================================================================================
+
+COPIEZ-COLLEZ CE TEXTE POUR ORDONNER À L'IA DE TRAVAILLER SUR VOTRE CODE :
+
+--------------------------------------------------------------------------------
+
+Agis en tant qu'Architecte Logiciel Senior React/TypeScript.
+
+CONTEXTE :
+Je développe un projet divisé en deux applications React totalement indépendantes : 
+1. "front_eval" (Interface client ).
+2. "back_eval" (Interface admin ).
+
+Ces deux applications ne partagent AUCUN dossier physique (tout dossier "shared" est strictement interdit). Elles reposent sur une "architecture miroir" : les deux projets ont exactement la même arborescence interne pour faciliter la navigation de l'équipe.
+
+OBJECTIF :
+Refactorise et organise le code que je vais te fournir en respectant scrupuleusement cette architecture miroir et transformer l'interface par un css leger et facilement manipulable.
+CONSIGNES STRICTES :
+1. STRUCTURE REQUISE : Sépare la logique de mon code et indique clairement dans lequel de ces dossiers chaque partie doit aller :
+   - /api (Services, appels Fetch)
+   - /components (Composants UI)
+   - /hooks (Logique métier et états locaux)
+   - /pages (Vues principales)
+   - /types (Interfaces et types TypeScript)
+   - /utils (Fonctions de formatage, validations)
+2. ISOLATION ABSOLUE : Le code généré ne doit faire aucune référence à un dossier parent partagé. L'application doit être 100% autonome.
+3. TYPAGE STRICT : Utilise TypeScript. Les contrats de données (Interfaces) doivent être exhaustifs pour permettre une duplication manuelle propre (synchronisation) dans l'autre environnement si nécessaire.
+4. DOCUMENTATION : Ajoute des commentaires .md détaillés sur chaque fonction, composant et interface pour expliquer son rôle aux autres développeurs.
+5. PRÉSERVATION MÉTIER : Ne modifie jamais la logique de traitement existante (règles de gestion, algorithmes d'import, ). Applique uniquement les principes SOLID et Clean Code.
+
+FORMAT DE RÉPONSE ATTENDU :
+- Les chemins des fichiers recommandés (ex: src/components/exemple.tsx).
+- Le code complet, refactorisé, typé et documenté pour chaque fichier.
+- Une brève section "Guide de Synchronisation" expliquant si une partie de ce code (notamment les types) nécessitera d'être copiée à l'identique dans l'autre projet.
+
+CODE À TRAITER :
+[INSÉRER LE CODE ICI]
+
+--------------------------------------------------------------------------------

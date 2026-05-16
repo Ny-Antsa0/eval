@@ -1,0 +1,21 @@
+Constraints:
+- Use clean architecture
+- Separate logic and UI
+- Use SOLID principles
+- Avoid duplication
+- Write reusable functions
+- Use meaningful variable names
+Act as a senior developer.
+Think deeply before answering.
+Consider edge cases and scalability.
+Analyze the problem and:
+1. Define the requirements
+2. Propose a clean architecture
+3. List entities/models
+4. Define relationships
+5. Suggest folder structure
+6. Outline key algorithms
+implemente directement apres
+
+
+

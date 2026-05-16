@@ -1,0 +1,45 @@
+===========================================================
+PROJET : GESTIONNAIRE PRESTASHOP 8 - DASHBOARD & KPI (PHASE 2)
+TECHNOLOGIE : REACT (CLEAN ARCHITECTURE)
+===========================================================
+
+1. CORE & DOMAIN (Logique métier pure)
+--------------------------------------
+[ ] Créer 'src/core/constants/orderStatus.js' : 
+    - Mapping : STATUS_IN_CART (0), STATUS_PAID (2), STATUS_CANCELLED (6).
+[ ] Créer 'src/core/use-cases/CalculateMetrics.js' :
+    - Fonction pure 'calculateTotalOrders(orders)'
+    - Fonction pure 'calculateTotalRevenue(orders)' (avec parsing float + gestion devise).
+[ ] Créer 'src/core/utils/formatters.js' :
+    - Fonction 'formatPrice(amount)' pour l'affichage monétaire .
+
+2. DATA LAYER (API & Récupération)
+----------------------------------
+[ ] Update 'src/data/repositories/OrderRepository.js' :
+    - Ajouter 'updateStatus(orderId, statusId)' via endpoint '/api/order_histories'.
+    - S'assurer que le payload XML est généré via 'xmlParser.js'.
+[ ] Implémenter le rafraîchissement automatique des données après une modification de statut.
+
+3. PRESENTATION LAYER (UI React)
+--------------------------------
+[ ] Créer 'src/presentation/components/shared/KpiCard.jsx' :
+    - Props : label, value, icon, color.
+    - Style : Design épuré, typographie accentuée.
+[ ] Créer 'src/presentation/hooks/useOrderDashboard.js' :
+    - Gérer l'état local des commandes.
+    - Utiliser 'useMemo' pour recalculer les KPI uniquement quand la liste des commandes change.
+[ ] Update 'src/presentation/views/DashboardPage.jsx' :
+    - Section 4 (Top) : Affichage des deux KpiCards (Nombre & Montant).
+    - Section 4 (Tableau) : Colonne "État" avec badges colorés.
+    - Section 5 (Actions) : Groupe de boutons (Payer / Annuler / Panier).
+
+4. OPTIMISATION & SÉCURITÉ
+--------------------------
+[ ] Ajouter un 'LoadingState' (Spinner) lors de la mise à jour d'un statut.
+[ ] Ajouter une notification visuelle (Toast) en cas de succès ou d'erreur API.
+[ ] Vérifier la réactivité : Les KPI doivent se mettre à jour instantanément après une suppression ou un import.
+
+-----------------------------------------------------------
+FIN DE LA LISTE - ÉTAT : EN ATTENTE D'IMPLÉMENTATION
+===========================================================
+

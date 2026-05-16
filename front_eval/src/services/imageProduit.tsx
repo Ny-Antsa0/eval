@@ -1,6 +1,6 @@
 import { buildApiUrl, getData } from './api'
 import { extractList } from './xmlParser'
-import { readXmlText } from './infoProduit'
+import { readXmlText } from '../core/utils/xml'
 
 export type ProductImage = {
   id: string

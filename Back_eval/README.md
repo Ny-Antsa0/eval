@@ -1,6 +1,7 @@
 # Back Office PrestaShop 8
 
-Spécification: voir [PROJET_GESTIONNAIRE_PRESTASHOP_BACK-OFFICE.md](PROJET_GESTIONNAIRE_PRESTASHOP_BACK-OFFICE.md)
+Specification: [PROJET_GESTIONNAIRE_PRESTASHOP_BACK-OFFICE.md](PROJET_GESTIONNAIRE_PRESTASHOP_BACK-OFFICE.md)  
+Architecture and implementation notes: [ARCHITECTURE.md](ARCHITECTURE.md)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

@@ -1,4 +1,5 @@
-import type { ResetGroup } from '../pages/Dashboard'
+import ActivityLog from './ActivityLog'
+import type { ResetGroup } from '../hooks/backOffice/types'
 
 type ResetPanelProps = {
   groups: ResetGroup[]
@@ -10,36 +11,40 @@ type ResetPanelProps = {
 const ResetPanel = ({ groups, isBusy, log, onReset }: ResetPanelProps) => {
   return (
     <section className="card">
+      {/* Resume du role du cleaner et des contraintes FK. */}
       <div className="card-header">
         <div>
           <h2>Reinitialisation des donnees</h2>
-          <p>Purge par groupe, dans l'ordre securise des dependances.</p>
+          <p>Purge par groupe, dans l&apos;ordre securise des dependances.</p>
         </div>
+        <span className="section-badge">Cleaner</span>
       </div>
+
       <div className="group-actions">
+        {/* Un bouton par groupe pour respecter l'ordre de suppression. */}
         {groups.map((group) => (
-          <button
-            key={group.label}
-            type="button"
-            className="secondary"
-            onClick={() => onReset(group)}
-            disabled={isBusy}
-          >
-            Reinitialiser {group.label}
-          </button>
+          <div key={group.id} className="action-tile">
+            <div>
+              <strong>{group.label}</strong>
+              <p>{group.description}</p>
+            </div>
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => onReset(group)}
+              disabled={isBusy}
+            >
+              Reinitialiser
+            </button>
+          </div>
         ))}
       </div>
-      <div className="log">
-        {log.length === 0 ? (
-          <p className="muted">Aucun rapport pour le moment.</p>
-        ) : (
-          <ul>
-            {log.map((line, index) => (
-              <li key={`${line}-${index}`}>{line}</li>
-            ))}
-          </ul>
-        )}
-      </div>
+
+      <ActivityLog
+        title="Rapport de nettoyage"
+        lines={log}
+        emptyMessage="Aucun rapport pour le moment."
+      />
     </section>
   )
 }

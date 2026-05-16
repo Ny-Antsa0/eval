@@ -26,9 +26,20 @@
 // Sortie : { prestashop: { product: { id: '1' } } }
 // ============================================================
 export function parseXML(xmlString) {
+  const normalized = String(xmlString ?? '').replace(/^\ufeff/, '').trimStart();
+  if (!normalized.trim()) {
+    throw new Error('Reponse API vide (XML attendu).');
+  }
+
+  if (/^<(!doctype|html)/i.test(normalized)) {
+    throw new Error(
+      'Reponse API non XML (HTML detecte). Verifiez le proxy /api ou la cle API.',
+    );
+  }
+
   // DOMParser est une API native du navigateur pour parser du XML
   const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+  const xmlDoc = parser.parseFromString(normalized, 'text/xml');
   
   // Vérifier si le XML est valide (sinon il y a une balise <parsererror>)
   const parserError = xmlDoc.querySelector('parsererror');
@@ -99,6 +110,14 @@ function xmlToObject(node) {
 // Utilisé en interne. Tu n'as normalement pas besoin d'appeler
 // cette fonction directement. Utilise generatePrestashopXML() à la place.
 // ============================================================
+const escapeXml = (value) =>
+  String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+
 export function objectToXML(obj, rootName = 'prestashop') {
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
   xml += `<${rootName} xmlns:xlink="http://www.w3.org/1999/xlink">\n`;
@@ -123,28 +142,28 @@ function objectToXMLString(obj, indent = 0) {
   // Ex: { '@attrs': { id: '1' }, '#text': 'Nom' } → <language id="1">Nom</language>
   if (obj['#text'] !== undefined && obj['@attrs']) {
     const attrs = Object.entries(obj['@attrs'])
-      .map(([k, v]) => `${k}="${v}"`)
+      .map(([k, v]) => `${k}="${escapeXml(v)}"`)
       .join(' ');
-    return `${indentStr}<${obj._tagName || 'element'}${attrs ? ' ' + attrs : ''}>${obj['#text']}</${obj._tagName || 'element'}>\n`;
+    return `${indentStr}<${obj._tagName || 'element'}${attrs ? ' ' + attrs : ''}>${escapeXml(obj['#text'])}</${obj._tagName || 'element'}>\n`;
   }
 
   for (const key in obj) {
     if (key === '_attributes' || key === '@attrs' || key === '#text') continue; // Ignorer les clés spéciales
 
     const value = obj[key];
-    const attrs = value['@attrs'] ? Object.entries(value['@attrs']).map(([k, v]) => `${k}="${v}"`).join(' ') : '';
+    const attrs = value['@attrs'] ? Object.entries(value['@attrs']).map(([k, v]) => `${k}="${escapeXml(v)}"`).join(' ') : '';
     const textContent = value['#text'] !== undefined ? value['#text'] : null;
 
     if (Array.isArray(value)) {
       // Si c'est un TABLEAU → créer une balise pour chaque élément
       // Ex: language: [{...}, {...}] → <language>...</language><language>...</language>
       for (const item of value) {
-        const itemAttrs = item['@attrs'] ? Object.entries(item['@attrs']).map(([k, v]) => `${k}="${v}"`).join(' ') : '';
+        const itemAttrs = item['@attrs'] ? Object.entries(item['@attrs']).map(([k, v]) => `${k}="${escapeXml(v)}"`).join(' ') : '';
         const itemText = item['#text'] !== undefined ? item['#text'] : null;
 
         if (itemText !== null && Object.keys(item).filter(k => k !== '@attrs' && k !== '#text').length === 0) {
           // Cas simple : juste du texte avec attributs
-          xml += `${indentStr}<${key}${itemAttrs ? ' ' + itemAttrs : ''}>${itemText}</${key}>\n`;
+          xml += `${indentStr}<${key}${itemAttrs ? ' ' + itemAttrs : ''}>${escapeXml(itemText)}</${key}>\n`;
         } else {
           xml += `${indentStr}<${key}${itemAttrs ? ' ' + itemAttrs : ''}>\n`;
           const tempObj = { ...item };
@@ -160,7 +179,7 @@ function objectToXMLString(obj, indent = 0) {
     } else if (typeof value === 'object' && value !== null) {
       // Si c'est un OBJET avec texte direct (cas PrestaShop multilingue simple)
       if (textContent !== null && Object.keys(value).filter(k => k !== '@attrs' && k !== '#text').length === 0) {
-        xml += `${indentStr}<${key}${attrs ? ' ' + attrs : ''}>${textContent}</${key}>\n`;
+        xml += `${indentStr}<${key}${attrs ? ' ' + attrs : ''}>${escapeXml(textContent)}</${key}>\n`;
       } else {
         // Si c'est un OBJET → créer une balise qui contient les sous-éléments
         xml += `${indentStr}<${key}${attrs ? ' ' + attrs : ''}>\n`;
@@ -175,13 +194,13 @@ function objectToXMLString(obj, indent = 0) {
       }
     } else {
       // Si c'est une VALEUR simple (string, number) → balise avec texte
-      xml += `${indentStr}<${key}>${value}</${key}>\n`;
+      xml += `${indentStr}<${key}>${escapeXml(value)}</${key}>\n`;
     }
   }
 
   // Ajouter le contenu texte s'il existe
   if (obj._textContent !== undefined) {
-    xml += `${indentStr}${obj._textContent}\n`;
+    xml += `${indentStr}${escapeXml(obj._textContent)}\n`;
   }
 
   return xml;

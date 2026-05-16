@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getData } from './api'
 import { loadProductImages, type ProductImage } from './imageProduit'
-import { loadProductInfo, readXmlText, type ProductInfo } from './infoProduit'
+import { loadProductInfo, type ProductInfo } from './infoProduit'
+import { readXmlText } from '../core/utils/xml'
 import { extractList } from './xmlParser'
 
 type ProductSummary = Record<string, unknown>

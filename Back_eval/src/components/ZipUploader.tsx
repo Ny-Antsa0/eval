@@ -1,49 +1,31 @@
+import ActivityLog from './ActivityLog'
+import UploadCard from './UploadCard'
+
 type ZipUploaderProps = {
   isBusy: boolean
   log: string[]
-  onUpload: (file: File) => void
+  onUpload: (files: FileList | File[]) => void
 }
 
 const ZipUploader = ({ isBusy, log, onUpload }: ZipUploaderProps) => {
+  // Carte de chargement d'archives ZIP d'images.
   return (
-    <section className="card">
-      <div className="card-header">
-        <div>
-          <h2>Upload d'images</h2>
-          <p>Archive ZIP, association automatique par ID produit.</p>
-        </div>
-      </div>
-      <label className="dropzone">
-        <input
-          type="file"
-          accept=".zip"
-          onChange={(event) => {
-            const file = event.target.files?.[0]
-            if (file) {
-              onUpload(file)
-              event.target.value = ''
-            }
-          }}
-          disabled={isBusy}
-        />
-        <div>
-          <strong>Selectionnez une archive ZIP</strong>
-          <span>Une image par produit, nommee par son ID (ex: 101.jpg).</span>
-        </div>
-        <span className="chip">ZIP unique</span>
-      </label>
-      <div className="log">
-        {log.length === 0 ? (
-          <p className="muted">Aucun upload pour le moment.</p>
-        ) : (
-          <ul>
-            {log.map((line, index) => (
-              <li key={`${line}-${index}`}>{line}</li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </section>
+    <UploadCard
+      title="Upload d'images ZIP"
+      description="Extraction du dossier d'images contenu dans le ZIP."
+      helperText="Le ZIP doit contenir un dossier d'images; chaque image commence par l'ID produit, par exemple 101.jpg."
+      buttonLabel="Parcourir le ZIP"
+      badgeLabel="ZIP unique"
+      accept=".zip,application/zip"
+      disabled={isBusy}
+      onSelectFiles={onUpload}
+    >
+      <ActivityLog
+        title="Rapport d'upload images"
+        lines={log}
+        emptyMessage="Aucun upload pour le moment."
+      />
+    </UploadCard>
   )
 }
 

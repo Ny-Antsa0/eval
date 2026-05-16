@@ -1,4 +1,6 @@
-import { useMemo } from 'react'
+import ActivityLog from './ActivityLog'
+import UploadCard from './UploadCard'
+import { CSV_TEMPLATE_HINTS } from '../hooks/backOffice/constants'
 
 type CsvDropzoneProps = {
   isBusy: boolean
@@ -7,47 +9,38 @@ type CsvDropzoneProps = {
 }
 
 const CsvDropzone = ({ isBusy, log, onImport }: CsvDropzoneProps) => {
-  const acceptLabel = useMemo(() => '.csv', [])
-
+  // Carte generique qui encapsule le file input et le contenu.
   return (
-    <section className="card">
-      <div className="card-header">
-        <div>
-          <h2>Importation CSV</h2>
-          <p>Selection multiple, conversion XML, synchronisation automatique.</p>
-        </div>
+    <UploadCard
+      title="Importation Excel / CSV"
+      description="Selection multiple de fichiers tableur et synchronisation API."
+      helperText="Format principal: fichier Excel avec feuilles produits, declinaisons/stock et commandes. CSV/TSV restent acceptes."
+      buttonLabel="Parcourir les fichiers"
+      badgeLabel="Excel et CSV"
+      accept=".csv,.tsv,.txt,.xlsx,.xlsm,.xltx,.xltm,.xls,.xlsb,.xla,.xlt,.xml,.html,.htm,text/csv,text/tab-separated-values,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      multiple
+      disabled={isBusy}
+      onSelectFiles={onImport}
+    >
+      <div className="template-list">
+        <h3>Exemples de structures attendues</h3>
+        <ul>
+          {/* Aide visuelle pour limiter les erreurs de mapping. */}
+          {CSV_TEMPLATE_HINTS.map((template) => (
+            <li key={template.fileName}>
+              <strong>{template.fileName}</strong>
+              <span>{template.columns.join(', ')}</span>
+            </li>
+          ))}
+        </ul>
       </div>
-      <label className="dropzone">
-        <input
-          type="file"
-          multiple
-          accept={acceptLabel}
-          onChange={(event) => {
-            if (event.target.files) {
-              onImport(event.target.files)
-              event.target.value = ''
-            }
-          }}
-          disabled={isBusy}
-        />
-        <div>
-          <strong>Deposez vos CSV ici</strong>
-          <span>ou cliquez pour selectionner plusieurs fichiers.</span>
-        </div>
-        <span className="chip">CSV multiples</span>
-      </label>
-      <div className="log">
-        {log.length === 0 ? (
-          <p className="muted">Aucun import pour le moment.</p>
-        ) : (
-          <ul>
-            {log.map((line, index) => (
-              <li key={`${line}-${index}`}>{line}</li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </section>
+
+      <ActivityLog
+        title="Rapport d'import"
+        lines={log}
+        emptyMessage="Aucun import pour le moment."
+      />
+    </UploadCard>
   )
 }
 

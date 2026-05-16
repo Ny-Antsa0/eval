@@ -1,3 +1,24 @@
+Constraints:
+- Use clean architecture
+- Separate logic and UI
+- Use SOLID principles
+- Avoid duplication
+- Write reusable functions
+- Use meaningful variable names
+Act as a senior developer.
+Think deeply before answering.
+Consider edge cases and scalability.
+Analyze the problem and:
+1. Define the requirements
+2. Propose a clean architecture
+3. List entities/models
+4. Define relationships
+5. Suggest folder structure
+6. Outline key algorithms
+implemente directement apres
+
+do the project on Back_eval
+
 PROJET : GESTIONNAIRE DE DONNÉES PRESTASHOP 8 (BACK-OFFICE CUSTOM)
 ----------------------------------------------------------------
 
@@ -24,12 +45,14 @@ PROJET : GESTIONNAIRE DE DONNÉES PRESTASHOP 8 (BACK-OFFICE CUSTOM)
 
 3. IMPORTATION MASSIVE (CSV & IMAGES)
     - Import CSV Multi-fichiers :
+    la structure du csv est dans le fichier import-data-mais-26.xlsx
         * Champ d'import permettant la sélection de plusieurs fichiers simultanément.
+            -on doit parcourir les fichiers sans utiliser drag and drop 
         * Logique de lecture : Flux (Stream) pour transformer le texte brut en JSON.
-        * Conversion XML : Passage du JSON par 'xmlParser.js' pour formater les données selon les schémas PrestaShop.
+        * Conversion XML : Passage du XML par 'xmlParser.js' pour formater les données selon les schémas PrestaShop.
         * Synchronisation : Méthodes PUT (mise à jour) ou POST (création) sur les endpoints concernés.
     - Gestion des Images (.ZIP) :
-        * Champ d'upload pour fichier .ZIP unique.
+        * Champ d'upload pour fichier .ZIP unique ou multiple .
         * Extraction des images et liaison automatique via le nom du fichier (ex: 101.jpg lié au produit ID 101).
         * Upload binaire vers l'endpoint '/api/images/products/'.
 
@@ -37,21 +60,21 @@ PROJET : GESTIONNAIRE DE DONNÉES PRESTASHOP 8 (BACK-OFFICE CUSTOM)
     - Affichage : Liste dynamique des commandes via '/api/orders'.
     - Bouton "Modifier" : Ouvre les options de modification rapide pour chaque ligne.
     - Actions rapides sur les statuts (via '/api/order_histories') :
-        * ARREUR 1 : Échec de paiement (ID 8).
-        * ARREUR 2 : Paiement effectué (ID 2).
-        * ARREUR 3 : Paiement annulé (ID 6).
+        * ERREUR 1 : Échec de paiement (ID 8).
+        * ERREUR 2 : Paiement effectué (ID 2).
+        * ERREUR 3 : Paiement annulé (ID 6).
     - Validation : Confirmation visuelle après chaque modification de statut.
 
 5. INTERFACE UTILISATEUR (UI)
     - Page de Contrôle Centralisée :
+    page 1 :
         * Section 1 : Boutons de réinitialisation par table.
         * Section 2 : Zone de Drag & Drop pour fichiers CSV multiples.
         * Section 3 : Zone d'upload pour le dossier d'images .ZIP.
+
+    page 2 :
         * Section 4 : Tableau de bord des commandes avec boutons de modification.
-
-
-
-
+        * section 5 : Modification des commandes 
 
 
 

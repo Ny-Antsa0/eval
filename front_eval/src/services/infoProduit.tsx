@@ -1,5 +1,6 @@
 import { getData } from './api'
 import { extractDetail } from './xmlParser'
+import { readXmlText } from '../core/utils/xml'
 
 export type ProductInfo = Record<string, unknown>
 
@@ -14,37 +15,48 @@ export const loadProductInfo = async (productId: string | number): Promise<Produ
   return product ? (product as ProductInfo) : null
 }
 
-export function readXmlText(value: unknown): string {
-  if (value === null || value === undefined) {
-    return ''
-  }
+export type ProductDetails = {
+  featureIds: string[]
+  combinationIds: string[]
+  stockValue: string
+}
 
-  if (typeof value === 'string' || typeof value === 'number') {
-    return String(value)
-  }
+export const extractProductDetails = (product: ProductInfo): ProductDetails => {
+  const associations = (product.associations || {}) as Record<string, unknown>
+  const features = associations.product_features as Record<string, unknown> | Record<string, unknown>[] | undefined
+  const combinations = associations.combinations as Record<string, unknown> | Record<string, unknown>[] | undefined
 
-  if (Array.isArray(value)) {
-    return value.map((item) => readXmlText(item)).filter(Boolean).join(', ')
-  }
-
-  if (typeof value === 'object') {
-    const nested = value as Record<string, unknown>
-
-    if (typeof nested['#text'] === 'string' || typeof nested['#text'] === 'number') {
-      return String(nested['#text'])
-    }
-
-    if (nested.language !== undefined) {
-      return readXmlText(nested.language)
-    }
-
-    for (const child of Object.values(nested)) {
-      const text = readXmlText(child)
-      if (text) {
-        return text
+  const featureIds: string[] = []
+  if (Array.isArray(features)) {
+    for (const feature of features) {
+      const id = readXmlText((feature as Record<string, unknown>).id)
+      if (id) {
+        featureIds.push(id)
       }
     }
+  } else if (features) {
+    const id = readXmlText((features as Record<string, unknown>).id)
+    if (id) {
+      featureIds.push(id)
+    }
   }
 
-  return ''
+  const combinationIds: string[] = []
+  if (Array.isArray(combinations)) {
+    for (const combo of combinations) {
+      const id = readXmlText((combo as Record<string, unknown>).id)
+      if (id) {
+        combinationIds.push(id)
+      }
+    }
+  } else if (combinations) {
+    const id = readXmlText((combinations as Record<string, unknown>).id)
+    if (id) {
+      combinationIds.push(id)
+    }
+  }
+
+  const stockValue = readXmlText(product.quantity)
+
+  return { featureIds, combinationIds, stockValue }
 }
